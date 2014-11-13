@@ -3,6 +3,10 @@ from flask import Flask, request, redirect, url_for, make_response
 from werkzeug import secure_filename
 from parser import Parser
 
+#References:
+#http://flask.pocoo.org/docs/0.10/patterns/fileuploads/
+#http://code.tutsplus.com/tutorials/an-introduction-to-pythons-flask-framework--net-28822
+
 UPLOAD_FOLDER = os.getcwd()
 ALLOWED_EXTENSIONS = set(['pdf'])
 
