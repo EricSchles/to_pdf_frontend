@@ -1,8 +1,7 @@
 import os
 from flask import Flask, request, redirect, url_for, make_response
 from werkzeug import secure_filename
-from parser import Parser
-
+import parser
 #References:
 #http://flask.pocoo.org/docs/0.10/patterns/fileuploads/
 #http://code.tutsplus.com/tutorials/an-introduction-to-pythons-flask-framework--net-28822
@@ -22,12 +21,12 @@ def allowed_files(filename):
 
 @app.route('/download/<filename>')
 def download(filename):
-	response = make_response(filename)
+        csv_file = os.path.join(app.config['UPLOAD_FOLDER'],filename)
+	with open(csv_file,"r") as f:
+                csv = f.read()
+        response = make_response(csv)
 	response.headers['Content-Disposition'] = "attachment; filename="+filename
 	return response
-
-
-
 
 
 @app.route("/",methods=['GET','POST'])
@@ -37,10 +36,14 @@ def index():
 		if pdf_file and allowed_files(pdf_file.filename):
 			filename = secure_filename(pdf_file.filename)
 			pdf_file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-			
-
-
-			return redirect(url_for('download',filename=filename))
+                        parser.main(pdf=filename)
+                        if "@" in filename and filename.count(".") == 2:
+                                name_csv = filename.split(".")[0]+"."+filename.split(".")[1]+".csv"
+                        else:
+                                name_csv = filename.split(".")[0]+".csv"
+                        #print filename
+                        #to_download = os.path.join(app.config['UPLOAD_FOLDER'],name_csv)
+			return redirect(url_for('download',filename=name_csv))
 	return '''
 	<!doctype html>
     <title>Upload new File</title>
