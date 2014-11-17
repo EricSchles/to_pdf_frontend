@@ -41,15 +41,6 @@ def index():
                                 name_csv = filename.split(".")[0]+"."+filename.split(".")[1]+".csv"
                         else:
                                 name_csv = filename.split(".")[0]+".csv"
-                        #print filename
-                        #to_download = os.path.join(app.config['UPLOAD_FOLDER'],name_csv)
+                        
 			return redirect(url_for('download',filename=name_csv))
-	return '''
-	<!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-    '''
+	return render_template("index.html")
